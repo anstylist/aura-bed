@@ -1,9 +1,7 @@
-package com.aura.api.model;
+package com.aura.api.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 

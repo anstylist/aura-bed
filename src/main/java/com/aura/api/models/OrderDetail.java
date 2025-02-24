@@ -1,5 +1,6 @@
-package com.aura.api.model;
+package com.aura.api.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class OrderDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonManagedReference
     private Product product;
 
     @Column(name = "qty", nullable = false)

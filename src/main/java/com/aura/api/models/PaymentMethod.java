@@ -1,4 +1,4 @@
-package com.aura.api.model;
+package com.aura.api.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,4 +15,3 @@ public class PaymentMethod {
     @Column(name = "method", nullable = false, length = 45)
     private String method;
 }
-

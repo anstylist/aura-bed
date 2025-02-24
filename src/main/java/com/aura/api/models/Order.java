@@ -1,4 +1,4 @@
-package com.aura.api.model;
+package com.aura.api.models;
 
 import jakarta.persistence.*;
 import lombok.Data;

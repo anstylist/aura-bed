@@ -1,5 +1,7 @@
-package com.aura.api.model;
+package com.aura.api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "category")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Category {
 
     @Id
@@ -31,5 +34,6 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonBackReference
     private List<Product> products;
 }
