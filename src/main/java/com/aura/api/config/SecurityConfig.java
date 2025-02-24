@@ -31,7 +31,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/api/auth/login",
             "/api/auth/register",
-            // "/api/auth/logout",
+            "/api/auth/logout",
             "/api/auth/refresh-token",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",

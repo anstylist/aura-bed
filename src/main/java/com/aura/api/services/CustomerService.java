@@ -22,12 +22,6 @@ public class CustomerService implements ICustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
@@ -45,41 +39,6 @@ public class CustomerService implements ICustomerService {
 
     public Customer getCustomerByEmail(String email) {
         return customerRepository.findByEmail(email);
-    }
-
-    public Customer registerUser(RegisterRequest newUser) {
-        Customer newCustomer = new Customer();
-        newCustomer.setEmail(newUser.getEmail());
-        newCustomer.setFirstName(newUser.getFirstName());
-        newCustomer.setLastName(newUser.getLastName());
-        newCustomer.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        newCustomer.setRole(Role.USER);
-
-        newCustomer = customerRepository.save(newCustomer);
-
-        return newCustomer;
-    }
-
-    public LoggedUser login(LoginUser loginUser) {
-        Customer user = customerRepository.findByEmail(loginUser.getEmail());
-        if (user == null) {
-            return null;
-        }
-
-        if (!user.getPassword().equals(passwordEncoder.encode(loginUser.getPassword()))) {
-            return null;
-        }
-
-        String token = jwtService.generateToken(new HashMap<>(), user);
-
-        LoggedUser loggedUser = new LoggedUser();
-
-        loggedUser.setEmail(user.getEmail());
-        loggedUser.setLastName(user.getLastName());
-        loggedUser.setFirstName(user.getFirstName());
-        loggedUser.setToken(token);
-
-        return loggedUser;
     }
 
     @Override
