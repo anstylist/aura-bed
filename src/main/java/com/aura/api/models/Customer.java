@@ -1,5 +1,7 @@
 package com.aura.api.models;
 import com.aura.api.utils.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +29,7 @@ public class Customer implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -55,6 +58,8 @@ public class Customer implements UserDetails {
     @OneToMany(mappedBy = "customer")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonManagedReference
+    @JsonIgnore
     private List<Order> orders;
 
     @Override

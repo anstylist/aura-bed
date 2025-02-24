@@ -11,9 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             //.allowedOrigins("https://frontclientes.netlify.app/")
-            .allowedOrigins("http://localhost:8080", "http://localhost:5501", "http://localhost:5502", "http://localhost:5503")
+            .allowedOrigins("*")
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedHeaders("*")
-            .allowCredentials(true);
+            .allowCredentials(false);
     }
 }
