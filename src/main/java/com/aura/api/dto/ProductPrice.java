@@ -8,4 +8,5 @@ import lombok.Data;
 public class ProductPrice {
     private Integer id;
     private Double price;
+    private Integer stock;
 }

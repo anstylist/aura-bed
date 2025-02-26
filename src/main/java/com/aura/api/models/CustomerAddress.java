@@ -1,4 +1,5 @@
 package com.aura.api.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,7 +18,11 @@ public class CustomerAddress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
+
+    @Column(name = "identifier", nullable = false)
+    private String identifier;
 
     @Column(name = "country", nullable = false)
     private String country;

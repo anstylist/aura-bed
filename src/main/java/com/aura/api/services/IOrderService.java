@@ -1,6 +1,7 @@
 package com.aura.api.services;
 
-import com.aura.api.dto.OrderItemRequest;
+import com.aura.api.dto.CheckoutCustomer;
+import com.aura.api.dto.OrderItem;
 import com.aura.api.models.Order;
 
 import java.util.List;
@@ -18,5 +19,8 @@ public interface IOrderService {
 
     void deleteOrder(Integer id);
 
-    Order createOrderWithProducts(Integer customerId, Integer paymentMethodId, List<OrderItemRequest> orderItems);
+    Order createOrderWithProducts(Integer customerId,
+                                  CheckoutCustomer customerAddress);
+
+    List<Order> getOrdersByCustomerId(Integer customerId);
 }

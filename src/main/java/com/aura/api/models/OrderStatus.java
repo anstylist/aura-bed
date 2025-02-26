@@ -15,5 +15,7 @@ public class OrderStatus {
 
     @Column(name = "status", nullable = false, length = 45)
     private String status;
+
+
 }
 

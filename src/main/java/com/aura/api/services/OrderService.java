@@ -1,6 +1,7 @@
 package com.aura.api.services;
 
-import com.aura.api.dto.OrderItemRequest;
+import com.aura.api.dto.CheckoutCustomer;
+import com.aura.api.dto.OrderItem;
 import com.aura.api.dto.ProductPrice;
 import com.aura.api.exceptions.ResourceNotFoundException;
 import com.aura.api.models.*;
@@ -36,6 +37,12 @@ public class OrderService implements IOrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
+    @Autowired
+    private CustomerAddressRepository customerAddressRepository;
+
+    @Autowired
+    private DiscountCodeRepository discountCodeRepository;
+
     @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
@@ -70,43 +77,67 @@ public class OrderService implements IOrderService {
         orderRepository.deleteById(id);
     }
 
-    @Override
     @Transactional
     public Order createOrderWithProducts(
             Integer customerId,
-            Integer paymentMethodId,
-            List<OrderItemRequest> orderItems
+            CheckoutCustomer checkoutCustomer
     ) {
+        System.out.println("AURA - STARTING ORDER CREATION");
+        List<OrderItem> orderItems = checkoutCustomer.getProducts();
         Customer customer = new Customer();
         customer.setId(customerId);
 
         PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setId(paymentMethodId);
+        paymentMethod.setId(checkoutCustomer.getPaymentMethodId());
 
         OrderStatus defaultStatus = new OrderStatus();
-        defaultStatus.setId(1);
+        defaultStatus.setId(2);
+
+        Optional<DiscountCode> discountCode;
+
+        CustomerAddress customerAddress = new CustomerAddress();
+        customerAddress.setIdentifier(checkoutCustomer.getIdentifier());
+        customerAddress.setAddress1(checkoutCustomer.getAddress1());
+        customerAddress.setAddress2(checkoutCustomer.getAddress2());
+        customerAddress.setCity(checkoutCustomer.getCity());
+        customerAddress.setCountry(checkoutCustomer.getCountry());
+        customerAddress.setZipCode(checkoutCustomer.getZipCode());
+        customerAddress.setCustomer(customer);
+
+        customerAddress = customerAddressRepository.save(customerAddress);
+
+        System.out.println("AURA - CUSTOMER ADDRESS CREATED");
 
         Order order = new Order();
         order.setCustomer(customer);
         order.setPaymentMethod(paymentMethod);
         order.setStatus(defaultStatus);
         order.setTotalPrice(0.0f);
+        order.setCustomerAddress(customerAddress);
 
         order = orderRepository.save(order);
 
+        System.out.println("AURA - ORDER CREATED");
+
         List<Integer> productIds = orderItems.stream()
-                .map(OrderItemRequest::getProductId)
+                .map(OrderItem::getProductId)
                 .collect(Collectors.toList());
 
         Map<Integer, Double> productPrices = productRepository.findPricesByIds(productIds).stream()
                 .collect(Collectors.toMap(ProductPrice::getId, ProductPrice::getPrice));
-//        List<Product> productos = productRepository.findAllById(productIds);
+
+        Map<Integer, Integer> productStocks = productRepository.findPricesByIds(productIds).stream()
+                .collect(Collectors.toMap(ProductPrice::getId, ProductPrice::getStock));
 
         float totalPrice = 0.0f;
+        float subTotal = 0.0f;
+        float discount = 0.0f;
+
         List<OrderDetail> orderDetails = new ArrayList<>();
-        for (OrderItemRequest item : orderItems) {
+        for (OrderItem item : orderItems) {
             Integer productId = item.getProductId();
             Double price = productPrices.get(productId);
+            Integer stock = productStocks.get(productId);
 
             if (price == null) {
                 throw new ResourceNotFoundException("Product not found with id: " + productId);
@@ -122,12 +153,33 @@ public class OrderService implements IOrderService {
             orderDetail.setUnityPrice(price.floatValue());
             orderDetails.add(orderDetail);
 
-            totalPrice += price * item.getQuantity();
+            productRepository.updateStockById(product.getId(), stock - item.getQuantity());
+
+            subTotal += price * item.getQuantity();
+        }
+
+        totalPrice = subTotal;
+        if (checkoutCustomer.getDiscountId() != null) {
+            discountCode = discountCodeRepository.findById(checkoutCustomer.getDiscountId());
+            if (discountCode.isPresent()) {
+                 discount = discountCode.get().getDiscountPercent()/100 * subTotal;
+                 totalPrice -= discount;
+            }
         }
 
         orderDetailRepository.saveAll(orderDetails);
+
+        System.out.println("AURA - ORDER DETAILS CREATED");
+
+        order.setSubTotal(subTotal);
         order.setTotalPrice(totalPrice);
+
+        System.out.println("AURA - ORDER UPDATED WITH TOTAL PRICE");
         return orderRepository.save(order);
+    }
+
+    public List<Order> getOrdersByCustomerId(Integer customerId) {
+        return orderRepository.findByCustomerId(customerId);
     }
 }
 

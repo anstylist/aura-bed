@@ -1,5 +1,7 @@
 package com.aura.api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.Data;
 @Entity
 @Table(name = "order_detail")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderDetail {
 
     @Id
@@ -15,6 +18,7 @@ public class OrderDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,6 +1,6 @@
 package com.aura.api.controllers;
 
-import com.aura.api.models.Campaing;
+import com.aura.api.models.Campaign;
 import com.aura.api.models.Influencer;
 import com.aura.api.services.InfluencerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +53,9 @@ public class InfluencerController {
     }
 
     @GetMapping("/{id}/campaigns")
-    public ResponseEntity<List<Campaing>> getInfluencerCampaigns(@PathVariable Integer id) {
+    public ResponseEntity<List<Campaign>> getInfluencerCampaigns(@PathVariable Integer id) {
         try {
-            List<Campaing> campaigns = influencerService.getInfluencerCampaigns(id);
+            List<Campaign> campaigns = influencerService.getInfluencerCampaigns(id);
             return ResponseEntity.ok(campaigns);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

@@ -7,6 +7,7 @@ import com.aura.api.dto.auth.RegisteredUser;
 import com.aura.api.exceptions.ExistentUserException;
 import com.aura.api.models.Customer;
 import com.aura.api.services.IAuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class AuthController {
     private IAuthService authService;
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new User")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest newUser) {
         try {
             Customer user = authService.registerUser(newUser);
@@ -38,6 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login a User")
     public ResponseEntity<LoggedUser> login(@Valid @RequestBody LoginUser loginUser) {
         LoggedUser loggedUser = authService.login(loginUser);
         if (loggedUser == null) {

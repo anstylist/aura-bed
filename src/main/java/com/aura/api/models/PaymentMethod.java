@@ -1,11 +1,13 @@
 package com.aura.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "payment_method")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PaymentMethod {
 
     @Id
