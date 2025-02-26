@@ -32,7 +32,9 @@ public class SecurityConfig {
             "/api/auth/refresh-token",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",
+            "/v3/api-docs/**",
             "/swagger-ui/**",
+            "/swagger-ui.html",
     };
 
     private static final String[] WHITE_GET_LIST_URL = {
