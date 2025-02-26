@@ -38,6 +38,7 @@ public class SecurityConfig {
     };
 
     private static final String[] WHITE_GET_LIST_URL = {
+            "/",
             "/api/products",
             "/api/categories",
             "/api/influencers",
