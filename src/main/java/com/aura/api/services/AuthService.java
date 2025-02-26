@@ -26,13 +26,13 @@ public class AuthService implements IAuthService {
     private CustomerRepository customerRepository;
 
     public Customer registerUser(RegisterRequest newUser) {
-        Customer existentUser = customerRepository.findByEmail(newUser.getEmail());
+        Customer existentUser = customerRepository.findByEmail(newUser.getEmail().toLowerCase());
         if (existentUser != null) {
             throw new ExistentUserException("The user with the email "+newUser.getEmail()+" already exist");
         }
 
         Customer newCustomer = new Customer();
-        newCustomer.setEmail(newUser.getEmail());
+        newCustomer.setEmail(newUser.getEmail().toLowerCase());
         newCustomer.setFirstName(newUser.getFirstName());
         newCustomer.setLastName(newUser.getLastName());
         newCustomer.setPassword(passwordEncoder.encode(newUser.getPassword()));
@@ -44,7 +44,7 @@ public class AuthService implements IAuthService {
     }
 
     public LoggedUser login(LoginUser loginUser) {
-        Customer user = customerRepository.findByEmail(loginUser.getUsername());
+        Customer user = customerRepository.findByEmail(loginUser.getUsername().toLowerCase());
 
         if (user == null) {
             return null;

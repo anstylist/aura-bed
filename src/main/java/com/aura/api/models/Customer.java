@@ -52,6 +52,7 @@ public class Customer implements UserDetails {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @JsonManagedReference
     @ToString.Exclude
     private List<CustomerAddress> addresses = new ArrayList<>();
 

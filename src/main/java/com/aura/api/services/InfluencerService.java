@@ -1,7 +1,7 @@
 package com.aura.api.services;
 
 import com.aura.api.exceptions.ResourceNotFoundException;
-import com.aura.api.models.Campaing;
+import com.aura.api.models.Campaign;
 import com.aura.api.models.Influencer;
 import com.aura.api.repositories.InfluencerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +54,10 @@ public class InfluencerService implements IInfluencerService {
         influencerRepository.deleteById(id);
     }
 
-    public List<Campaing> getInfluencerCampaigns(Integer influencerId) {
+    public List<Campaign> getInfluencerCampaigns(Integer influencerId) {
         Influencer influencer = influencerRepository.findById(influencerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Influencer not found with id: " + influencerId));
-        return influencer.getCampaings();
+        return influencer.getCampaigns();
     }
 
 }

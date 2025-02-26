@@ -1,12 +1,15 @@
 package com.aura.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "campaing")
 @Data
-public class Campaing {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Campaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +21,7 @@ public class Campaing {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "influencer_id", nullable = false)
+    @JsonManagedReference
     private Influencer influencer;
 
     @Column(name = "image_url", nullable = false, length = 255)

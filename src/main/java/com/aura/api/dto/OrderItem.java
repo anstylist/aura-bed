@@ -3,7 +3,7 @@ package com.aura.api.dto;
 import lombok.Data;
 
 @Data
-public class OrderItemRequest {
+public class OrderItem {
     private Integer productId;
     private Integer quantity;
 }

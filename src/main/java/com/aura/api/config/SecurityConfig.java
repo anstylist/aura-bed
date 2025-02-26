@@ -5,11 +5,8 @@ import com.aura.api.utils.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -47,21 +44,20 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .requestMatchers(GET, WHITE_GET_LIST_URL)
-                                .permitAll()
-                                .requestMatchers("/api/management/**").hasAnyRole(Role.ADMIN.name())
-                                .anyRequest()
-                                .authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(req ->
+                req.requestMatchers(WHITE_LIST_URL)
+                    .permitAll()
+                    .requestMatchers(GET, WHITE_GET_LIST_URL)
+                    .permitAll()
+                    .requestMatchers("/api/management/**").hasAnyRole(Role.ADMIN.name())
+                    .anyRequest()
+                    .authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         ;
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

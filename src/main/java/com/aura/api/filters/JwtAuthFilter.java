@@ -41,6 +41,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);
         final String userEmail = jwtService.extractUsername(jwt);
 
+        System.out.println("--- AURA - REQUEST FILTER - EMAIL: " + userEmail + " / JWT: " + jwt);
+
         // El userEmail no es null y el usuario NO está autenticado
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customerService.getCustomerByEmail(userEmail);
